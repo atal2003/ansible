@@ -1,0 +1,12 @@
+---
+
+ - name: practice
+   hosts: localhost
+   gather_facts: true
+
+   tasks: 
+    - name: gathering
+      debug: var=ansible_date_time.hour|int|type_debug
+
+
+

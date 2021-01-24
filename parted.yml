@@ -1,0 +1,37 @@
+---
+
+
+ - name: making partion on remote server
+   hosts: myserver
+   #vars: partstart=input
+   
+
+   ignore_errors: yes
+   tasks: 
+     - name: first step 
+       parted: 
+         device: /dev/xvda
+         number: 2
+         part_start: 3GiB
+         part_end: 4GiB
+
+     - name: second step 
+       filesystem: 
+         dev: /dev/xvda2
+         fstype: ext4
+       ignore_errors: yes
+         
+     - name: third step
+       file: 
+         path: /mnt/tes
+         state: directory
+
+
+     - name: frouth step 
+       mount: 
+         path: /mnt/tes
+         src: dev/xvda2
+         fstype: ext4
+         state: mounted
+
+

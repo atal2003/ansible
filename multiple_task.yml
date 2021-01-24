@@ -1,0 +1,27 @@
+---
+
+ - name: this is a play book
+   hosts: myserver
+   gather_facts: yes
+   vars_prompt:
+     - name: user_name
+       prompt: enter your user name
+       private: no
+   ignore_errors: yes
+   tasks: 
+   - name: installing
+     apt:
+       name=apache2 
+       state=present
+
+   - name: collection info
+     shell: cat /etc/passwd | tail -n1 
+     register: test
+
+   - name: updating 
+     shell: apt-get update
+     when: ansible_distribution == "Ubuntu"
+
+   - name: print hour of this operation system 
+     debug:  var=ansible_date_time.hour  
+     tags: one  

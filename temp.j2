@@ -1,0 +1,9 @@
+
+
+{% if ansible_date_time.hour|int >= 6 %}
+
+Good Afternoon
+
+{% endif %}
+
+this host ip is "{{ ansible_hostname }}"

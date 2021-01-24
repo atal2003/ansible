@@ -1,0 +1,14 @@
+--- 
+
+ - name: this to use split of python
+   hosts: localhost
+   become: yes
+
+
+   tasks: 
+     - name: print process
+       shell: top | tail -n5
+       register: top
+
+     - name: print above variable
+       debug: msg= "{{ top.stdout.split() }}"

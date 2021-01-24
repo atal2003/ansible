@@ -1,0 +1,32 @@
+---
+
+- name: this to copy a template to node
+  hosts: myserver
+  gather_facts: true
+  vars: 
+    users: 
+      - name: Ashan Safi
+        user_name: asafi
+      - name: Shaywa Safi
+        user_name: ssafi
+      - name: Zoelay Safi
+        user_name: zsafi
+
+  ignore_errors: yes
+  tasks:
+    - name: creating the list abo e user
+      user: 
+        name: "{{ item.user_name }}"
+        state: present
+        comment: "{{ item.name }}"
+      loop: "{{ users }}"
+
+    - name: copying the config file to user's home directory
+      template: 
+        src: temp.j2
+        dest: /home/{{ item.user_name }}/git.conf
+        owner: "{{ item.user_name }}"
+        group: "{{ item.user_name }}"
+        mode: 0600
+      become: yes
+      loop: "{{ users }}"

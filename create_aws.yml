@@ -1,0 +1,13 @@
+---
+
+ - name: creating ec2 instance
+   hosts: localhost
+   connection: local
+
+
+   tasks: 
+     - name: ec2 creating
+       ec2:
+         instance_type: t2.micro
+         image: ami-00ddb0e5626798373 
+         region: us-east-1 
