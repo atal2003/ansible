@@ -1,0 +1,23 @@
+---
+ - name: it will test 
+   hosts: localhost
+   gather_facts: False
+
+   tasks:
+     - name: Provision a set of instances
+       ec2:
+         key_name: first_key
+         group: New
+         region: us-east-1
+         instance_type: t2.micro
+         image: ami-00ddb0e5626798373
+         wait: true
+         exact_count: 1
+         count_tag:
+           Name: Demo
+         instance_tags:
+           name: Demo
+       register: ec2_info
+
+     - name: printing
+       debug: var=ec2_info.instances.public_ip

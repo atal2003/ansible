@@ -1,0 +1,81 @@
+
+---
+
+ - name: making a key for project
+   hosts: localhost
+   vars_files: 
+     - /opt/project_aws/myvar
+
+
+   ignore_errors: true
+   tasks:
+     - name: making key 
+       ec2_key:
+         name: myaws_pro
+         region: "{{ region }}"
+       register: ec2_proj_info
+     - name: print
+       debug: var=ec2_proj_info.key.private_key
+     
+     - name: copy the content of the private key 
+       copy:
+         content: "{{ ec2_proj_info.key.private_key }}"
+         dest: ./private.txt
+         mode: 0600
+       when: ec2_proj_info.changed
+
+     - name: creating security group
+       ec2_group:
+         name: myaws_proj
+         description: this will be the security group for the ansible project
+         region: "{{ region }}"
+         rules:
+           - proto: tcp
+             from_port: 80
+             to_port: 80
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 22
+             to_port: 22
+             cidr_ip: 72.251.170.187/32
+           - proto: tcp
+             from_port: 3306
+             to_port: 3306
+             cidr_ip: 72.251.170.187/32
+           - proto: tcp
+             from_port: 8080
+             to_port: 8080
+             cidr_ip: 72.251.170.187/32
+       register: myawspro
+       
+     - name: printing above security group
+       debug: var=myawspro
+
+
+     - name: allowing trafic within the security group
+       ec2_group:
+         name: myaws_proj
+         description: this will be the security group for the ansible project
+         region: "{{ region }}"
+         rules:
+           - proto: tcp
+             from_port: 80
+             to_port: 80
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 22
+             to_port: 22
+             cidr_ip: 72.251.170.187/32
+           - proto: tcp
+             from_port: 3306
+             to_port: 3306
+             cidr_ip: 72.251.170.187/32
+           - proto: tcp
+             from_port: 8080
+             to_port: 8080
+             cidr_ip: 72.251.170.187/32
+           - proto: all
+             group_id: "{{ myawspro.group_id }}"
+       register: myawspro
+       
+
